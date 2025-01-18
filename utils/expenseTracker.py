@@ -3,7 +3,7 @@ import streamlit as st
 
 class ExpenseManager():
     def __init__(self):
-        #making a empty dataframe here- this stores the expense. use this for any opreations on the expense. 
+        #making a empty dataframe here- this stores the expense.   
         self.expenses=pd.DataFrame(columns=['Name','Date','Amount','Description','Category'])
     
     #adding new expense
