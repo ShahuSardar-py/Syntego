@@ -1,6 +1,7 @@
 import streamlit as st
 from Home import manager
 
+#show dataframe- using st.table
 def View():
     st.title("Your Expenses")
     st.caption("View all expenses here")
@@ -10,6 +11,7 @@ def View():
     else:
         st.table(expenses)
 
+#deletes by ID- calls dleteexpense from ExpenseManager()
 def delete():
     st.header("Delete expense")
     with st.expander("delete"):
@@ -18,6 +20,7 @@ def delete():
             deleted= st.form_submit_button("DSeleteee")
             if deleted:
                 manager.deleteExpense(index)
+                
             else:
                 st.write("invaslid!!E")
 
