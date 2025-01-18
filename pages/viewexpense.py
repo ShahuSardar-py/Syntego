@@ -10,7 +10,19 @@ def View():
     else:
         st.table(expenses)
 
+def delete():
+    st.header("Delete expense")
+    with st.expander("delete"):
+        with st.form("delete_form"):
+            index= st.number_input("enter id", min_value=0,step=1)
+            deleted= st.form_submit_button("DSeleteee")
+            if deleted:
+                manager.deleteExpense(index)
+            else:
+                st.write("invaslid!!E")
+
 
 View()
+delete()
 
         

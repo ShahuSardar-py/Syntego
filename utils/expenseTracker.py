@@ -16,7 +16,8 @@ class ExpenseManager():
     def deleteExpense(self,index):
         #uses index to delete that index number
         if 0 <= index <len(self.expenses):
-            del self.expenses[index]
+            self.expenses = self.expenses.drop(self.expenses.index[index]).reset_index(drop=True)
+            
         else:
             st.warning("Invalid index ⚠")
     
