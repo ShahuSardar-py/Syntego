@@ -8,11 +8,11 @@ def Add():
     with st.form("expesne_form"):
         exName= st.text_input("Enter Expense Title")
         exDate= st.date_input("Expense Date")
-        exAmount= st.number_input("Amount Spent")
+        exAmount= st.number_input("Amount Spent", min_value=0)
         exDes= st.text_area("Description")
-        exCategory= st.selectbox("Category of expense", ("Food", "Personal", "Transport", "Investment"))
+        exCategory= st.selectbox("Category of expense", ("Food 🍕", "Personal 👨 ", "Transport 🚌", "Investment 💱"))
 
-        submitted = st.form_submit_button("Add This Expense")
+        submitted = st.form_submit_button("Add ➕")
         if submitted:
             manager.addExpense(exDate,exName,exAmount,exCategory, exDes)
             st.toast("Added Expense! 🎉")

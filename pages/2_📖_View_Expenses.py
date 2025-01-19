@@ -17,12 +17,13 @@ def delete():
     with st.expander("delete"):
         with st.form("delete_form"):
             index= st.number_input("enter id", min_value=0,step=1)
-            deleted= st.form_submit_button("DSeleteee")
+            deleted= st.form_submit_button("⛔")
             if deleted:
                 manager.deleteExpense(index)
+                st.toast("Deleted Expense!")
                 
             else:
-                st.write("invaslid!!E")
+                st.write("enter valid index number")
 
 
 View()
