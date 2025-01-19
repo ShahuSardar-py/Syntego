@@ -17,4 +17,16 @@ def Add():
             manager.addExpense(exDate,exName,exAmount,exCategory, exDes)
             st.toast("Added Expense! 🎉")
 
+def calculator():
+    with st.sidebar:
+        with st.expander("Simple Calculator"):
+            input=st.text_input("enter calculation")
+            calculate=st.button("Calculate")
+            if calculate:
+                answer=eval(input)
+                st.success(answer)
+            
+
+
 Add()
+calculator()

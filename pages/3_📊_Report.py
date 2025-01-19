@@ -11,7 +11,7 @@ def report():
     if not expenses.empty:
         category_summary = expenses.groupby("Category")["Amount"].sum()
         st.bar_chart(category_summary)
-        st.metric(label="total spent", value=total, delta="1.2 °F")
+        st.metric(label="total spent", value=total)
         #total=expenses[("Amount")].sum()
         #col1= st.columns(1)
         #col1.metric(label="total spent", value=total, delta=1000)
