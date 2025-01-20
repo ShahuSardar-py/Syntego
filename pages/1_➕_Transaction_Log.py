@@ -28,7 +28,7 @@ def Income():
         InDate= st.date_input("Income Date")
         InAmount= st.number_input("Amount Spent", min_value=0)
         InDes= st.text_area("Description")
-        InSource= st.selectbox("Category of expense", ("-","Salary 💳", "Family 👨 ", "Investment 💱", "Other"))
+        InSource= st.selectbox("Source Of Income", ("-","Salary 💳", "Family 👨 ", "Investment 💱", "Other"))
 
         submit2 = st.form_submit_button("Add Income ➕")
         if submit2:

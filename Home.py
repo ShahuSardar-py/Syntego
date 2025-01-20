@@ -14,3 +14,5 @@ ExManager = ExpenseManager()
 InManager= IncomeManager()
 account=Account()
 
+st.toast("EVERYTHIN GOOD HERE!")
+
