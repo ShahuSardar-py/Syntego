@@ -1,9 +1,12 @@
 import streamlit as st
-from Home import manager
+from Home import account
 
-def Add():
+
+def Expense():
     st.title("Add New Expense")
     st.caption("Add your expenses here.")
+    CurrentBalance=account.getBalance()
+    st.write(CurrentBalance)
 
     with st.form("expesne_form"):
         exName= st.text_input("Enter Expense Title")
@@ -12,10 +15,29 @@ def Add():
         exDes= st.text_area("Description")
         exCategory= st.selectbox("Category of expense", ("Food 🍕", "Personal 👨 ", "Transport 🚌", "Investment 💱"))
 
-        submitted = st.form_submit_button("Add ➕")
-        if submitted:
-            manager.addExpense(exDate,exName,exAmount,exCategory, exDes)
+        submit1 = st.form_submit_button("Add ➕")
+        if submit1:
+            account.addExpense(exDate,exName,exAmount,exCategory, exDes)
             st.toast("Added Expense! 🎉")
+
+
+def Income():
+    st.title("Add New income")
+    st.caption("Add your expincomesenses here.")
+    CurrentBalance=account.getBalance()
+    st.write(CurrentBalance)
+
+    with st.form("income_form"):
+        InName= st.text_input("Enter income Title")
+        InDate= st.date_input("income Date")
+        InAmount= st.number_input("Amount Spent", min_value=0)
+        InDes= st.text_area("Description")
+        InSource= st.selectbox("Category of expense", ("Salary 🍕", "Family 👨 ", "Freinds 🚌", "Investment 💱"))
+
+        submit2 = st.form_submit_button("Add ➕")
+        if submit2:
+            account.addIncome(InDate,InName,InAmount,InSource, InDes)
+            st.toast("Added income! 🎉")
 
 def calculator():
     with st.sidebar:
@@ -27,6 +49,9 @@ def calculator():
                 st.success(answer)
             
 
+with st.expander("Add Expense"):
+    Expense()
+with st.expander("Add income"):
+    Income()
 
-Add()
 calculator()
