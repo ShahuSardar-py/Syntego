@@ -3,7 +3,7 @@ import pandas as pd
 import streamlit as st
 
 class ExpenseManager:
-    def __init__(self, db_name="expenses.db"):
+    def __init__(self, db_name):
         self.db_name = db_name
         self.conn = sqlite3.connect(self.db_name)
         self.cursor = self.conn.cursor()
@@ -34,7 +34,7 @@ class ExpenseManager:
 
 
 class IncomeManager:
-    def __init__(self, db_name="expenses.db"):
+    def __init__(self, db_name):
         self.db_name = db_name
         self.conn = sqlite3.connect(self.db_name)
         self.cursor = self.conn.cursor()
@@ -65,7 +65,7 @@ class IncomeManager:
 
 
 class Account:
-    def __init__(self, db_name="expenses.db"):
+    def __init__(self, db_name):
         self.IncomeManager = IncomeManager(db_name)
         self.ExpenseManager = ExpenseManager(db_name)
         self.Balance = 1000000.0  
@@ -76,28 +76,22 @@ class Account:
         self.Balance = total_income - total_expense
         return self.Balance
 
-
-    # Add expense
     def addExpense(self, date, name, amount, category, description):
         self.ExpenseManager.addExpense(date, name, amount, category, description)
-        self.Balance -= amount  # Deduct from balance
+        self.Balance -= amount
         st.success(f"Expense '{name}' added successfully!")
 
-    # Add income
     def addIncome(self, date, name, amount, source, description):
         self.IncomeManager.addIncome(date, name, amount, source, description)
-        self.Balance += amount  # Add to balance
+        self.Balance += amount
         st.success(f"Income '{name}' added successfully!")
 
-    # View expenses
     def expenseList(self):
         return self.ExpenseManager.viewExpenses()
 
-    # View income
     def incomeList(self):
         return self.IncomeManager.viewIncome()
 
-    # Delete expense
     def deleteExpense(self, expense_id):
         expenses = self.ExpenseManager.viewExpenses()
         if expenses.empty:
@@ -112,7 +106,6 @@ class Account:
         else:
             st.warning(f"Invalid Expense ID: {expense_id}")
 
-    # Delete income
     def deleteIncome(self, income_id):
         incomes = self.IncomeManager.viewIncome()
         if incomes.empty:
@@ -127,11 +120,3 @@ class Account:
         else:
             st.warning(f"Invalid Income ID: {income_id}")
 
-
-    # View all income
-    def incomeList(self):
-        return self.IncomeManager.viewIncome()
-
-    # View all expenses
-    def expenseList(self):
-        return self.ExpenseManager.viewExpenses()
