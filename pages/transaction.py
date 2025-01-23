@@ -9,6 +9,7 @@ user_id = st.text_input("Enter a unique user identifier (Probably your name with
 
 # Initialize account and current_balance only if user_id is provided
 if user_id:
+    
     db_name = f"{user_id}.db"  
 
     # Initialize the Account object with the dynamically created db_name
