@@ -2,22 +2,28 @@ import streamlit as st
 from utils.test import Account  
 import time  # Import time for delay
 
+
 if "logged_in" not in st.session_state or not st.session_state.logged_in:
     st.warning("Please log in first.")
     st.stop()
 
+
 user_email = st.session_state.user_email
 db_name = f"{user_email}.db"  
+
 
 account = Account(db_name=db_name)
 st.title("💵 Add Transactions")
 import streamlit as st
 
+
 # Initialize session state for balance if not already present
 if "balance" not in st.session_state:
     st.session_state.balance = account.getBalance()  # Fetch from database
 
+
 st.header("💰 Current Balance: ₹" + str(st.session_state.balance))
+
 
 # Add Expense
 with st.expander("⬆ Add New Expense"):
@@ -28,13 +34,14 @@ with st.expander("⬆ Add New Expense"):
         exDes = st.text_area("Description")
         exCategory = st.selectbox("Category of expense", ("-","Food 🍕", "Personal 👨 ", "Transport 🚌", "Investment 💱"))
         submit_expense = st.form_submit_button("Add Expense ➕")
-        
+       
         if submit_expense:
             account.addExpense(exDate, exName, exAmount, exCategory, exDes)
             st.session_state.balance -= exAmount  # Deduct from balance
             st.toast("✅ Expense Added Successfully!")
             time.sleep(1.5)  # Delay for 1.5 seconds
             st.rerun()  # Rerun to refresh balance
+
 
 # Add Income
 with st.expander("⬇ Add New Income"):
@@ -45,10 +52,41 @@ with st.expander("⬇ Add New Income"):
         InDes = st.text_area("Description")
         InSource = st.selectbox("Source Of Income", ("-","Salary 💳", "Family 👨 ", "Investment 💱", "Other"))
         submit_income = st.form_submit_button("Add Income ➕")
-        
+       
         if submit_income:
             account.addIncome(InDate, InName, InAmount, InSource, InDes)
             st.session_state.balance += InAmount  # Add to balance
             st.toast("✅ Income Added Successfully!")
             time.sleep(1.5)  # Delay for 1.5 seconds
             st.rerun()  # Rerun to refresh balance
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

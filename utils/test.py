@@ -2,8 +2,13 @@ import sqlite3
 import pandas as pd
 import streamlit as st
 
+#expense manager class using db
 class ExpenseManager:
+
+    
+
     def __init__(self, db_name):
+
         self.db_name = db_name
         self.conn = sqlite3.connect(self.db_name)
         self.cursor = self.conn.cursor()
@@ -18,7 +23,7 @@ class ExpenseManager:
                                 description TEXT)''')
         self.conn.commit()
 
-    def addExpense(self, date, name, amount, category, description):
+    def addExpense(self, date, name, amount, category, description): #WHAT IS THIS? :(
         self.cursor.execute('''INSERT INTO expenses (name, date, amount, category, description)
                                VALUES (?, ?, ?, ?, ?)''', 
                                (name, date, amount, category, description))
