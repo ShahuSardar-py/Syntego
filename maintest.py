@@ -5,11 +5,53 @@ import sqlite3
 from utils.test import ExpenseManager
 from utils.test import IncomeManager
 from utils.test import Account
+from auth import AuthManager
 
-# Set up the page configuration for Streamlit
 st.set_page_config(page_title="Syntego", page_icon="💲")
 
-st.title("Hello World - Syntego 👋")
+st.title("💰 Personal Finance Manager")
+
+auth = AuthManager()
+
+# Session state for tracking login
+if "logged_in" not in st.session_state:
+    st.session_state.logged_in = False
+    st.session_state.user_email = ""
+
+tab1, tab2 = st.tabs(["🔑 Login", "📝 Register"])
+
+with tab1:
+    st.subheader("Login")
+    email = st.text_input("Email")
+    password = st.text_input("Password", type="password")
+    login_btn = st.button("Login")
+
+    if login_btn:
+        if auth.login_user(email, password):
+            st.session_state.logged_in = True
+            st.session_state.user_email = email
+            st.success("Login successful! Redirecting...")
+            st.rerun()
+
+        else:
+            st.error("Invalid email or password.")
+
+with tab2:
+    st.subheader("Register")
+    new_email = st.text_input("New Email")
+    new_password = st.text_input("New Password", type="password")
+    register_btn = st.button("Register")
+
+    if register_btn:
+        if auth.register_user(new_email, new_password):
+            st.success("Registration successful! Please log in.")
+        else:
+            st.error("Email already exists.")
+
+if st.session_state.logged_in:
+    st.success(f"Welcome, {st.session_state.user_email}!")
+    st.page_link("pages/view.py", label="View Transactions")
+    st.page_link("pages/transaction.py", label="Add Transactions")
 
 # Dynamically set the database name
 db_name = "expenses.db"
@@ -28,4 +70,6 @@ st.toast("EVERYTHING GOOD HERE!")
 
 
 # Close the connection
-conn.close()
+conn.close()  
+
+

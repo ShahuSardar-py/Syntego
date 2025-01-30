@@ -1,77 +1,54 @@
 import streamlit as st
-from utils.test import Account
+from utils.test import Account  
+import time  # Import time for delay
 
-st.title("Transaction Entry")
-st.subheader("Log Your Expenses Or Income")
+if "logged_in" not in st.session_state or not st.session_state.logged_in:
+    st.warning("Please log in first.")
+    st.stop()
 
-#  Get user identifier from the user
-user_id = st.text_input("Enter a unique user identifier (Probably your name with DOB or email):", key="user_id")
+user_email = st.session_state.user_email
+db_name = f"{user_email}.db"  
 
-# Initialize account and current_balance only if user_id is provided
-if user_id:
-    db_name = f"{user_id}.db"  
+account = Account(db_name=db_name)
+st.title("💵 Add Transactions")
+import streamlit as st
 
-    # Initialize the Account object with the dynamically created db_name
-    account = Account(db_name=db_name)
+# Initialize session state for balance if not already present
+if "balance" not in st.session_state:
+    st.session_state.balance = account.getBalance()  # Fetch from database
 
-    # Get the current balance for the user
-    current_balance = account.getBalance()
-    st.markdown(f'Your Current Balance is: :red[{current_balance}]')
-else:
-    st.warning("Please enter a valid user identifier to proceed.")
-    account = None
-    current_balance = None  # Default if no user_id is entered
-
-st.divider()
+st.header("💰 Current Balance: ₹" + str(st.session_state.balance))
 
 # Add Expense
-with st.expander("Add New Expense ⬆"):
-    if account:  # Ensure operations work only when account is initialized
-        with st.form("expense_form"):
-            exName = st.text_input("Expense Title")
-            exDate = st.date_input("Date Of Expense")
-            exAmount = st.number_input("Amount Spent", min_value=0.0)
-            exDes = st.text_area("Description")
-            exCategory = st.selectbox("Category of expense", ("-", "Food 🍕", "Personal 👨", "Transport 🚌", "Investment 💱"))
-
-            submit1 = st.form_submit_button("Add Expense ➕")
-            if submit1:
-                account.addExpense(exDate, exName, exAmount, exCategory, exDes)
-                st.toast("Added Expense! 🎉")
-                # Update the current balance
-                current_balance = account.getBalance()
-                st.markdown(f'Updated Balance: :red[{current_balance}]')
-    else:
-        st.info("Please enter a user ID to add an expense.")
+with st.expander("⬆ Add New Expense"):
+    with st.form("expense_form"):
+        exName = st.text_input("Expense Title")
+        exDate = st.date_input("Date Of Expense")
+        exAmount = st.number_input("Amount Spent", min_value=0.0)
+        exDes = st.text_area("Description")
+        exCategory = st.selectbox("Category of expense", ("-","Food 🍕", "Personal 👨 ", "Transport 🚌", "Investment 💱"))
+        submit_expense = st.form_submit_button("Add Expense ➕")
+        
+        if submit_expense:
+            account.addExpense(exDate, exName, exAmount, exCategory, exDes)
+            st.session_state.balance -= exAmount  # Deduct from balance
+            st.toast("✅ Expense Added Successfully!")
+            time.sleep(1.5)  # Delay for 1.5 seconds
+            st.rerun()  # Rerun to refresh balance
 
 # Add Income
-with st.expander("Add New Income ⬇"):
-    if account:  # Ensure operations work only when account is initialized
-        with st.form("income_form"):
-            InName = st.text_input("Income Title")
-            InDate = st.date_input("Income Date")
-            InAmount = st.number_input("Amount Received", min_value=0.0)
-            InDes = st.text_area("Description")
-            InSource = st.selectbox("Source Of Income", ("-", "Salary 💳", "Family 👨", "Investment 💱", "Other"))
-
-            submit2 = st.form_submit_button("Add Income ➕")
-            if submit2:
-                account.addIncome(InDate, InName, InAmount, InSource, InDes)
-                st.toast("Added Income! 🎉")
-                # Update the current balance
-                current_balance = account.getBalance()
-                st.markdown(f'Updated Balance: :red[{current_balance}]')
-    else:
-        st.info("Please enter a user ID to add income.")
-
-# Calculator
-with st.sidebar:
-    with st.expander("Calculator 🧮"):
-        input_calc = st.text_input("Enter calculation")
-        calculate = st.button("Calculate")
-        if calculate:
-            try:
-                answer = eval(input_calc)
-                st.success(answer)
-            except Exception as e:
-                st.error(f"Invalid input: {e}")
+with st.expander("⬇ Add New Income"):
+    with st.form("income_form"):
+        InName = st.text_input("Income Title")
+        InDate = st.date_input("Income Date")
+        InAmount = st.number_input("Amount Received", min_value=0.0)
+        InDes = st.text_area("Description")
+        InSource = st.selectbox("Source Of Income", ("-","Salary 💳", "Family 👨 ", "Investment 💱", "Other"))
+        submit_income = st.form_submit_button("Add Income ➕")
+        
+        if submit_income:
+            account.addIncome(InDate, InName, InAmount, InSource, InDes)
+            st.session_state.balance += InAmount  # Add to balance
+            st.toast("✅ Income Added Successfully!")
+            time.sleep(1.5)  # Delay for 1.5 seconds
+            st.rerun()  # Rerun to refresh balance
