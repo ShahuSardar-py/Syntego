@@ -70,7 +70,10 @@ else:
 # Initialize Cohere API Client 
 def get_budget_insights(user_query, transactions_text):
     # Request Cohere API for budget advice
-    prompt = f"User asked: {user_query}\nTransactions: {transactions_text}\nGive a financial tip or advice."
+    prompt = f"""User query: {user_query}\nTransactions list: {transactions_text}\n
+    You are our special financial expert. Your role here is to help users to manage finances and provide factual and practical financial tips based on their Transactions list AND User query. 
+    Do not answer anything beyond that. If you encounter any question beyond finance or Transaction list then ask the user to ask something else. 
+    If asked about yourself then describe yourself as a handy AI feature- named SynBot devolped by Sakshi & Shahu for Syntego Finance tracker. Do not mention it other than asked specifically. Keep your responses short & consise   """
     response = co.generate(
         model='command-xlarge-nightly',  
         prompt=prompt,
