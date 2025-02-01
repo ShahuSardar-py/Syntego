@@ -125,3 +125,21 @@ class Account:
         else:
             st.warning(f"Invalid Income ID: {income_id}")
 
+# New method to format transactions for AI
+    def format_transactions_for_ai(self):
+        expenses = self.ExpenseManager.viewExpenses()
+        income = self.IncomeManager.viewIncome()
+        
+        # Prepare the expenses data in a format suitable for AI (e.g., JSON, dict)
+        formatted_expenses = expenses[['name', 'date', 'amount', 'category', 'description']].to_dict(orient='records')
+        
+        # Prepare the income data in a format suitable for AI (e.g., JSON, dict)
+        formatted_income = income[['name', 'date', 'amount', 'source', 'description']].to_dict(orient='records')
+        
+        # Combine both formatted income and expenses
+        transactions = {
+            'income': formatted_income,
+            'expenses': formatted_expenses
+        }
+        
+        return transactions

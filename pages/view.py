@@ -1,5 +1,6 @@
 import streamlit as st
 from utils.test import Account  
+import time
 
 if "logged_in" not in st.session_state or not st.session_state.logged_in:
     st.warning("Please log in first.")
@@ -26,7 +27,8 @@ with st.expander("🗑️ Delete Expense"):
         expense_id = st.number_input("Enter Expense ID to Delete", min_value=0, step=1)
         if st.form_submit_button("Delete Expense"):
             account.deleteExpense(expense_id)
-            st.success("✅ Expense Deleted Successfully!")
+            st.toast("✅ Expense Deleted Successfully!")
+            time.sleep(1.5)
             st.rerun()
 
 # Income Section
@@ -43,5 +45,6 @@ with st.expander("🗑️ Delete Income"):
         income_id = st.number_input("Enter Income ID to Delete", min_value=0, step=1)
         if st.form_submit_button("Delete Income"):
             account.deleteIncome(income_id)
-            st.success("✅ Income Deleted Successfully!")
+            st.toast("✅ Income Deleted Successfully!")
+            time.sleep(1.5)
             st.rerun()

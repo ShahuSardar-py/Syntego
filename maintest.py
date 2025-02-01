@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import sqlite3
+import time
 
 from utils.test import ExpenseManager
 from utils.test import IncomeManager
@@ -31,6 +32,7 @@ with tab1:
             st.session_state.logged_in = True
             st.session_state.user_email = email
             st.success("Login successful! Redirecting...")
+            time.sleep(1.5)
             st.rerun()
 
         else:
@@ -47,11 +49,6 @@ with tab2:
             st.success("Registration successful! Please log in.")
         else:
             st.error("Email already exists.")
-
-if st.session_state.logged_in:
-    st.success(f"Welcome, {st.session_state.user_email}!")
-    st.page_link("pages/view.py", label="View Transactions")
-    st.page_link("pages/transaction.py", label="Add Transactions")
 
 # Dynamically set the database name
 db_name = "expenses.db"

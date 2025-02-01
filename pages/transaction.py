@@ -1,6 +1,6 @@
 import streamlit as st
 from utils.test import Account  
-import time  # Import time for delay
+import time  
 
 
 if "logged_in" not in st.session_state or not st.session_state.logged_in:
@@ -59,9 +59,6 @@ with st.expander("⬇ Add New Income"):
             st.toast("✅ Income Added Successfully!")
             time.sleep(1.5)  # Delay for 1.5 seconds
             st.rerun()  # Rerun to refresh balance
-
-
-
 
 
 
