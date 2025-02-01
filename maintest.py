@@ -1,5 +1,4 @@
 import streamlit as st
-import pandas as pd
 import sqlite3
 import time
 
@@ -8,9 +7,8 @@ from utils.test import IncomeManager
 from utils.test import Account
 from auth import AuthManager
 
-st.set_page_config(page_title="Syntego", page_icon="💲")
 
-st.title("💰 Personal Finance Manager")
+st.title("💰Syntego-Personal Finance Manager")
 
 auth = AuthManager()
 
@@ -34,7 +32,6 @@ with tab1:
             st.success("Login successful! Redirecting...")
             time.sleep(1.5)
             st.rerun()
-
         else:
             st.error("Invalid email or password.")
 
@@ -50,6 +47,12 @@ with tab2:
         else:
             st.error("Email already exists.")
 
+# Check if the user is logged in
+if st.session_state.logged_in:
+
+   st.success("To view, add, or manage your expenses and reports, click on the sidebar menu in the upper left corner.")
+
+
 # Dynamically set the database name
 db_name = "expenses.db"
 
@@ -62,11 +65,10 @@ account = Account(db_name=db_name)
 conn = sqlite3.connect(db_name)
 c = conn.cursor()
 
-# Toast notification
-st.toast("EVERYTHING GOOD HERE!")
+if st.session_state.logged_in:
 
+# Toast notification
+    st.toast("Welcome to Syntego!💰")
 
 # Close the connection
-conn.close()  
-
-
+conn.close()

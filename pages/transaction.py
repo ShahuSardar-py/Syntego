@@ -21,9 +21,11 @@ import streamlit as st
 if "balance" not in st.session_state:
     st.session_state.balance = account.getBalance()  # Fetch from database
 
+# Format the balance to show only two decimal places
+formatted_balance = f"₹{st.session_state.balance:.2f}"
 
-st.header("💰 Current Balance: ₹" + str(st.session_state.balance))
-
+# Display the balance
+st.header(f"💰 Current Balance: {formatted_balance}")
 
 # Add Expense
 with st.expander("⬆ Add New Expense"):
