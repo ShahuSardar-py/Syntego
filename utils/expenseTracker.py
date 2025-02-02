@@ -73,7 +73,7 @@ class Account:
     def __init__(self, db_name):
         self.IncomeManager = IncomeManager(db_name)
         self.ExpenseManager = ExpenseManager(db_name)
-        self.Balance = 1000000.0  
+        self.Balance = 0.0  
 
     def getBalance(self):
         total_income = self.IncomeManager.viewIncome()["amount"].sum()
@@ -84,12 +84,12 @@ class Account:
     def addExpense(self, date, name, amount, category, description):
         self.ExpenseManager.addExpense(date, name, amount, category, description)
         self.Balance -= amount
-        st.success(f"Expense '{name}' added successfully!")
+        st.success(f"Expense added successfully!")
 
     def addIncome(self, date, name, amount, source, description):
         self.IncomeManager.addIncome(date, name, amount, source, description)
         self.Balance += amount
-        st.success(f"Income '{name}' added successfully!")
+        st.success(f"Income added successfully!")
 
     def expenseList(self):
         return self.ExpenseManager.viewExpenses()
@@ -107,7 +107,7 @@ class Account:
             amount = expenses.loc[expenses["id"] == expense_id, "amount"].iloc[0]
             self.ExpenseManager.deleteExpense(expense_id)
             self.Balance += amount
-            st.success(f"Expense with ID {expense_id} deleted successfully!")
+            st.success(f"Expense {expense_id} deleted successfully!")
         else:
             st.warning(f"Invalid Expense ID: {expense_id}")
 
@@ -121,22 +121,20 @@ class Account:
             amount = incomes.loc[incomes["id"] == income_id, "amount"].iloc[0]
             self.IncomeManager.deleteIncome(income_id)
             self.Balance -= amount
-            st.success(f"Income with ID {income_id} deleted successfully!")
+            st.success(f"Income {income_id} deleted successfully!")
         else:
             st.warning(f"Invalid Income ID: {income_id}")
 
-# New method to format transactions for AI
+# transactions list
     def format_transactions_for_ai(self):
         expenses = self.ExpenseManager.viewExpenses()
         income = self.IncomeManager.viewIncome()
         
-        # Prepare the expenses data in a format suitable for AI (e.g., JSON, dict)
+       
         formatted_expenses = expenses[['name', 'date', 'amount', 'category', 'description']].to_dict(orient='records')
-        
-        # Prepare the income data in a format suitable for AI (e.g., JSON, dict)
         formatted_income = income[['name', 'date', 'amount', 'source', 'description']].to_dict(orient='records')
         
-        # Combine both formatted income and expenses
+        # final dictionary to be returned
         transactions = {
             'income': formatted_income,
             'expenses': formatted_expenses

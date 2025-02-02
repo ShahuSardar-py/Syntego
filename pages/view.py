@@ -1,3 +1,5 @@
+#CODE OPITMIZED AND MOVED TO MAIN. DO NOTR USE THIS 
+
 import streamlit as st
 from utils.test import Account  
 import time
