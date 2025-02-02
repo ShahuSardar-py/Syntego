@@ -13,6 +13,7 @@ api_key = os.getenv('COHERE_API_KEY')
 co = cohere.Client(api_key)
 
 
+
 if "logged_in" not in st.session_state or not st.session_state.logged_in:
     st.warning("Please log in first.")
     st.stop()
@@ -23,7 +24,7 @@ account = Account(db_name=db_name)
 
 st.title("📊 Financial Reports")
 st.write("A finance report of your cash.")
-
+st.divider()
 # Fetch Expenses & Income
 expenses_df = account.expenseList()
 income_df = account.incomeList()
@@ -37,7 +38,7 @@ if not income_df.empty:
 col1, col2 = st.columns(2)
 with col1:
     if not expenses_df.empty:
-        st.subheader("Expense by Category")
+      
         if not expenses_df.empty:
             category_data = expenses_df.groupby("category")["amount"].sum().reset_index()
             fig_expense_pie = px.pie(
@@ -55,7 +56,7 @@ with col1:
 with col2:
     if not income_df.empty:
 
-        st.subheader("Income by Source")
+      
         if not income_df.empty:
             income_data = income_df.groupby("source")["amount"].sum().reset_index()
             fig_income_pie = px.pie(
@@ -70,7 +71,7 @@ with col2:
 
 
 if not expenses_df.empty and not income_df.empty:
-    st.subheader("📊 Monthly Expense & Income Trends")
+   
 
     expenses_df["month"] = expenses_df["date"].dt.strftime("%Y-%m")
     income_df["month"] = income_df["date"].dt.strftime("%Y-%m")
@@ -94,7 +95,7 @@ if not expenses_df.empty and not income_df.empty:
 # Bar Chart: Monthly Spending by Category
 
 if not expenses_df.empty:
-    st.subheader("📊 Monthly Spending by Category")
+    
     category_monthly_data = expenses_df.groupby(["month", "category"])["amount"].sum().reset_index()
     fig_category_bar = px.bar(category_monthly_data, x="month", y="amount", color="category", barmode="group", title="Monthly Spending by Category")
     st.plotly_chart(fig_category_bar)
@@ -104,7 +105,7 @@ if not expenses_df.empty:
 # Stacked Bar Chart: Income vs Expenses
 
 if not expenses_df.empty and not income_df.empty:
-    st.subheader("📊 Income vs Expenses (Stacked View)")
+  
     stacked_data = pd.concat([
         monthly_expense.assign(Type="Expense"),
         monthly_income.assign(Type="Income")
@@ -166,7 +167,7 @@ with st.sidebar:
 
         user_query = st.text_input("Enter your question:")
 
-        if st.button("▶"):
+        if st.button("Send ▶"):
             if user_query.strip():
                 transactions_text = account.format_transactions_for_ai()
                 budget_tip = get_budget_insights(user_query, transactions_text)

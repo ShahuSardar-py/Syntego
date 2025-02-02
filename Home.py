@@ -1,14 +1,14 @@
 import streamlit as st
 import sqlite3
 import time
-
 from utils.expenseTracker import ExpenseManager
 from utils.expenseTracker import IncomeManager
 from utils.expenseTracker import Account
 from auth import AuthManager
 
 
-st.title("💰Syntego-Personal Finance Manager")
+st.title("Syntego")
+st.write("An AI powered finance tracker.")
 
 auth = AuthManager()
 
@@ -50,7 +50,7 @@ with tab2:
 # Check if the user is logged in
 if st.session_state.logged_in:
 
-   st.success("To view, add, or manage your expenses and reports, click on the sidebar menu in the upper left corner.")
+   st.success("Head to side bar to use features")
 
 
 # Dynamically set the database name
