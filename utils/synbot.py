@@ -7,7 +7,6 @@ api_key = os.getenv('COHERE_API_KEY')
 co = cohere.Client(api_key)
 
 def get_budget_insights(user_query, transactions_text):
-    # Request Cohere API for budget advice
     prompt = f"""User query: {user_query}\nTransactions list: {transactions_text}\n
     You are SynBot, a financial AI assistant developed by Sakshi & Shahu for the Syntego Finance Tracker and Respond to the user in a single, well-structured paragraph, ensuring that all sentences are complete and coherent, without any breaks or cutoff.
     Your job is **ONLY** to assist users with their **financial queries**, including budgeting, expense tracking, and savings advice. **DO NOT** answer anything that is unrelated to finance. If a user asks something outside finance, firmly respond with: 
