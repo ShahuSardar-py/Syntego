@@ -1,3 +1,4 @@
+## CODE OPTIMIZED & MERGED TO MAIN expensetracker.py - DO NOT USE
 import sqlite3
 import pandas as pd
 import streamlit as st
@@ -130,13 +131,13 @@ class Account:
         expenses = self.ExpenseManager.viewExpenses()
         income = self.IncomeManager.viewIncome()
         
-        # Prepare the expenses data in a format suitable for AI (e.g., JSON, dict)
+        # Prepare the expenses data in a format suitable for AI (e.g., JSON, dict) - DICT
         formatted_expenses = expenses[['name', 'date', 'amount', 'category', 'description']].to_dict(orient='records')
         
         # Prepare the income data in a format suitable for AI (e.g., JSON, dict)
         formatted_income = income[['name', 'date', 'amount', 'source', 'description']].to_dict(orient='records')
         
-        # Combine both formatted income and expenses
+        # Combine both formatted income and expenses- DICTIONARY 
         transactions = {
             'income': formatted_income,
             'expenses': formatted_expenses
