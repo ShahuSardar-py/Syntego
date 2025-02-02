@@ -4,28 +4,23 @@ import time
 
 
 if "logged_in" not in st.session_state or not st.session_state.logged_in:
-    st.warning("Please log in first.")
+    st.warning("Please log in to continue :)")
     st.stop()
-
 
 user_email = st.session_state.user_email
 db_name = f"{user_email}.db"  
-
-
 account = Account(db_name=db_name)
-st.title("💵 Add Transactions")
-import streamlit as st
 
 
-# Initialize session state for balance if not already present
+
+st.title("💵 Log Transactions")
+st.divider()
 if "balance" not in st.session_state:
     st.session_state.balance = account.getBalance()  # Fetch from database
 
-# Format the balance to show only two decimal places
-formatted_balance = f"₹{st.session_state.balance:.2f}"
 
-# Display the balance
-st.header(f"💰 Current Balance: {formatted_balance}")
+formatted_balance = f"₹{st.session_state.balance:.2f}"
+st.write(f"Current Balance: {formatted_balance}")
 
 # Add Expense
 with st.expander("⬆ Add New Expense"):
@@ -41,8 +36,8 @@ with st.expander("⬆ Add New Expense"):
             account.addExpense(exDate, exName, exAmount, exCategory, exDes)
             st.session_state.balance -= exAmount  # Deduct from balance
             st.toast("✅ Expense Added Successfully!")
-            time.sleep(1.5)  # Delay for 1.5 seconds
-            st.rerun()  # Rerun to refresh balance
+            time.sleep(1.5)  # Delay for 1.5 seconds-IMPORTANT
+            st.rerun() 
 
 
 # Add Income
@@ -59,8 +54,8 @@ with st.expander("⬇ Add New Income"):
             account.addIncome(InDate, InName, InAmount, InSource, InDes)
             st.session_state.balance += InAmount  # Add to balance
             st.toast("✅ Income Added Successfully!")
-            time.sleep(1.5)  # Delay for 1.5 seconds
-            st.rerun()  # Rerun to refresh balance
+            time.sleep(1.5)  
+            st.rerun()  
 
 
 
