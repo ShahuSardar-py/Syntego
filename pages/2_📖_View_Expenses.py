@@ -1,58 +1,50 @@
 import streamlit as st
-from Home import account
+from utils.expenseTracker import Account  
+import time
 
-#show dataframe- using st.table
-def ExpenseRecord():
-    st.title("Your Expense Record")
-    st.caption("View all expenses here")
-    expenses= account.expenseList()
-    if expenses.empty:
-        st.write("Looks like no expenses added yet! ")
-    else:
-        st.table(expenses)
+if "logged_in" not in st.session_state or not st.session_state.logged_in:
+    st.warning("Please log in first.")
+    st.stop()
 
-def IncomeRecord():
-    st.title("Your Expense Record")
-    st.caption("View all expenses here")
-    incomes= account.incomeList()
-    if incomes.empty:
-        st.write("Looks like no expenses added yet! ")
-    else:
-        st.table(incomes)
+user_email = st.session_state.user_email
+db_name = f"{user_email}.db"  
 
-#deletes by ID- calls dleteexpense from ExpenseManager()
-def deleteEX():
-    
-        st.subheader("Delete A Record")
-        with st.form("delete_form"):
-            index= st.number_input("enter id", min_value=0,step=1)
-            deleted= st.form_submit_button("⛔")
-            if deleted:
-                account.deleteExpense(index)
-                st.toast("Deleted Expense!")
-                
-            else:
-                st.write("enter valid index number")
+account = Account(db_name=db_name)
 
-def deleteIN():
-    
-        st.subheader("Delete A Record")
-        with st.form("delete_form2"):
-            index= st.number_input("enter id", min_value=0,step=1)
-            deleted= st.form_submit_button("⛔")
-            if deleted:
-                account.deleteIncome(index)
-                st.toast("Deleted Expense!")
-                
-            else:
-                st.write("enter valid index number")
+st.title("Your Transactions")
 
+# Expenses Section
+st.subheader("📉 Expenses")
+expenses_df = account.expenseList()
+if expenses_df.empty:
+    st.write("No expenses added yet.")
+else:
+    st.dataframe(expenses_df)
 
-with st.expander("Expense Record 🧾"):
-    ExpenseRecord()
-    deleteEX()
-with st.expander("Income Records 🧾"):
-    IncomeRecord()
-    deleteIN()
+# Delete Expense
+with st.expander("🗑️ Delete Expense"):
+    with st.form("delete_expense_form"):
+        expense_id = st.number_input("Enter Expense ID to Delete", min_value=0, step=1)
+        if st.form_submit_button("Delete Expense"):
+            account.deleteExpense(expense_id)
+            st.toast("✅ Expense Deleted Successfully!")
+            time.sleep(1.5)
+            st.rerun()
 
-        
+# Income Section
+st.subheader("📈 Income")
+income_df = account.incomeList()
+if income_df.empty:
+    st.write("No income data added.")
+else:
+    st.dataframe(income_df)
+
+# Delete Income
+with st.expander("🗑️ Delete Income"):
+    with st.form("delete_income_form"):
+        income_id = st.number_input("Enter Income ID to Delete", min_value=0, step=1)
+        if st.form_submit_button("Delete Income"):
+            account.deleteIncome(income_id)
+            st.toast("✅ Income Deleted Successfully!")
+            time.sleep(1.5)
+            st.rerun()

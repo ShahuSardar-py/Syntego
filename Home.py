@@ -1,54 +1,74 @@
 import streamlit as st
-import pandas as pd
+import sqlite3
+import time
 
 from utils.expenseTracker import ExpenseManager
 from utils.expenseTracker import IncomeManager
 from utils.expenseTracker import Account
+from auth import AuthManager
 
 
-st.markdown(
-    '''
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">Navbar</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Link</a>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Dropdown
-          </a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Action</a></li>
-            <li><a class="dropdown-item" href="#">Another action</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">Something else here</a></li>
-          </ul>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link disabled" aria-disabled="true">Disabled</a>
-        </li>
-      </ul>
-      <form class="d-flex" role="search">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success" type="submit">Search</button>
-      </form>
-    </div>
-  </div>
-</nav>''', unsafe_allow_html=True
-)
+st.title("💰Syntego-Personal Finance Manager")
+
+auth = AuthManager()
+
+# Session state for tracking login
+if "logged_in" not in st.session_state:
+    st.session_state.logged_in = False
+    st.session_state.user_email = ""
+
+tab1, tab2 = st.tabs(["🔑 Login", "📝 Register"])
+
+with tab1:
+    st.subheader("Login")
+    email = st.text_input("Email")
+    password = st.text_input("Password", type="password")
+    login_btn = st.button("Login")
+
+    if login_btn:
+        if auth.login_user(email, password):
+            st.session_state.logged_in = True
+            st.session_state.user_email = email
+            st.success("Login successful! Redirecting...")
+            time.sleep(1.5)
+            st.rerun()
+        else:
+            st.error("Invalid email or password.")
+
+with tab2:
+    st.subheader("Register")
+    new_email = st.text_input("New Email")
+    new_password = st.text_input("New Password", type="password")
+    register_btn = st.button("Register")
+
+    if register_btn:
+        if auth.register_user(new_email, new_password):
+            st.success("Registration successful! Please log in.")
+        else:
+            st.error("Email already exists.")
+
+# Check if the user is logged in
+if st.session_state.logged_in:
+
+   st.success("To view, add, or manage your expenses and reports, click on the sidebar menu in the upper left corner.")
 
 
-ExManager = ExpenseManager()
-InManager= IncomeManager()
-account=Account()
+# Dynamically set the database name
+db_name = "expenses.db"
 
+# Initialize the managers with the database name
+ExManager = ExpenseManager(db_name=db_name)
+InManager = IncomeManager(db_name=db_name)
+account = Account(db_name=db_name)
 
+# Establish SQLite database connection for testing
+conn = sqlite3.connect(db_name)
+c = conn.cursor()
+
+if st.session_state.logged_in:
+
+# Toast notification
+    st.toast("Welcome to Syntego!💰")
+
+# Close the connection
+conn.close()
